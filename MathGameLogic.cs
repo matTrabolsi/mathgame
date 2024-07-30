@@ -40,7 +40,9 @@ namespace math_game
                             firstNumber = Convert.ToInt32(Console.ReadLine());
                         }
                         catch(System.Exception)
-                        {}
+                        {
+                            
+                        }
                     }
                     GameHistory.Add($"{firstNumber} / {secondNumber} = {firstNumber / secondNumber}");
                     return firstNumber /  secondNumber;
