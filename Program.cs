@@ -10,8 +10,97 @@ Random random = new();
 int firstNumber, secondNumber, userMenuSelection, score = 0;
 bool gameOver = false;
 
+DiffcultyLevel diffcultyLevel = DiffcultyLevel.Easy;
 
+while(!gameOver)
+{
+    userMenuSelection = GetUserMenuSelection(mathGame);
+    firstNumber = random.Next(1, 101);
+    secondNumber = random.Next(1, 101);
 
+    switch(userMenuSelection)
+    {
+        case 1:
+            score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '+', diffcultyLevel);
+            break;
+        case 2:
+            score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '-', diffcultyLevel);
+            break;
+        case 3:
+            score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '*', diffcultyLevel);
+            break;
+        case 4:
+            while(firstNumber % secondNumber != 0)
+            {
+                firstNumber = random.Next(1, 101);
+                secondNumber = random.Next(1, 101);
+            }
+            score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '/', diffcultyLevel);
+            break;
+        case 5:
+            int numberOfQuestions = 99;
+            Console.WriteLine("please enter the number of question you want to attempt.");
+            while(!int.TryParse(Console.ReadLine(),out numberOfQuestions))
+            {
+                Console.WriteLine("please enter the number of questions you want to attempt as an intger number");
+            }
+            while(numberOfQuestions > 0){
+                int randomOperation = random.Next(1, 5);
+
+                if(randomOperation == 1)
+                {
+                    firstNumber = random.Next(1, 101);
+                    secondNumber = random.Next(1, 101);
+                    score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '+', diffcultyLevel);
+                }
+                else if(randomOperation == 2)
+                {
+                    firstNumber = random.Next(1, 101);
+                    secondNumber = random.Next(1, 101);
+                    score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '-', diffcultyLevel);
+                }
+                else if(randomOperation == 3)
+                {
+                    firstNumber = random.Next(1, 101);
+                    secondNumber = random.Next(1, 101);
+                    score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '*', diffcultyLevel);
+                }
+                else
+                {
+                    firstNumber = random.Next(1, 101);
+                    secondNumber = random.Next(1, 101);
+                    while(firstNumber % secondNumber != 0)
+                    {
+                        firstNumber = random.Next(1, 101);
+                        secondNumber = random.Next(1, 101);
+                    }
+                    score += await PerformOperation(mathGame, firstNumber, secondNumber, score, '/', diffcultyLevel);
+                }
+                numberOfQuestions--;
+            }
+            break;
+        case 6:
+            Console.WriteLine("GAME HISTORY: \n");
+            foreach( var operation in mathGame.GameHistory)
+            {
+                Console.WriteLine($"{operation}");
+            }
+            break;
+        
+        case 7:
+            diffcultyLevel = ChangeDifficulty();
+            DiffcultyLevel diffcultyEnum = (DiffcultyLevel)diffcultyLevel;
+            Enum.IsDefined(typeof(DiffcultyLevel), diffcultyEnum);
+            Console.WriteLine($"Your new difficulty level: {diffcultyLevel}");
+            break;
+
+        case 8:
+            gameOver = true;
+            Console.WriteLine($"Your final score is: {score}");
+            break;
+
+    }
+}
 
 
 
@@ -71,7 +160,8 @@ static async Task<int?> GetUserResponse(DiffcultyLevel  difficulty)
     
     Stopwatch stopwatch = new();
     stopwatch.Start();
-    Task<string> getUserInputTask = Task.Run(() => Console.ReadLine());
+
+    Task<string?> getUserInputTask = Task.Run(() => Console.ReadLine());
 
     try
     {
@@ -113,7 +203,7 @@ static int ValidateResult(int result, int? userRepose, int score)
     return score;
 }
 
-static async Task<int> PerformOperation(MathGameLogic mathGame, int firstNumber, int secondNumber, char operation, int score, DiffcultyLevel diffculty)
+static async Task<int> PerformOperation(MathGameLogic mathGame, int firstNumber, int secondNumber, int score, char operation, DiffcultyLevel diffculty)
 {
     int result;
     int? userResponse;
