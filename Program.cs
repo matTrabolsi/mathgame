@@ -171,7 +171,8 @@ static async Task<int?> GetUserResponse(DiffcultyLevel  difficulty)
 
         if(result != null && int.TryParse(result, out response))
         {
-            Console.WriteLine($"Time taken to answer: {stopwatch.Elapsed.ToString(@"m\::ss|/fff")}");
+            //Console.WriteLine($"Time taken to answer: {stopwatch.Elapsed.ToString(@"m\::ss\.fff")}");
+            Console.WriteLine($"Time taken to answer: {stopwatch.Elapsed.ToString(@"m\:ss\.fff")}");
             return response;
         }
 
